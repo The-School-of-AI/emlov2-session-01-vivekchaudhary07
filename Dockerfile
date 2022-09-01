@@ -1,5 +1,5 @@
 # Stage 1: Builder/Compiler
-FROM balenalib/aarch64-python:3.7-sid AS build
+FROM --platform=linux/arm64/v8 python:3.9.13-slim-buster  AS build
 
 RUN apt-get update -y && apt install -y --no-install-recommends git
     
@@ -16,7 +16,7 @@ RUN pip install -U --no-cache-dir torch numpy && pip install --no-cache-dir -r r
 #     && rm -rf /var/lib/apt/lists/* /root/.cache/* /var/cache/apk/* /tmp/*
 
 # # Stage 2: Runtime
-FROM balenalib/aarch64-python:3.7-sid
+FROM --platform=linux/arm64/v8 python:3.9.13-slim-buster 
 
 COPY --from=build /venv /venv
 ENV PATH=/venv/bin:$PATH
