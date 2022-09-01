@@ -1,7 +1,3 @@
-tests/
-.git
-.github
-*.md
 tmp.py
 .nfs*
 *.ipynb
@@ -11,4 +7,3 @@ tmp.py
 .vscode
 *gz
 *.pt
-*.sh
