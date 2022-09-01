@@ -12,8 +12,25 @@
 9. Submit the Dockerfile contents and your complete image name with tag that was uploaded to DockerHub, also the link to the github classroom repository
 10. Tests for github classroom can be run with  bash `./tests/all_tests.sh`
 
+
+Small Docker Images (<900MB) will get additional bonus points
+
+less the image size, more the bonus points
+
+## Solution
+
+### [Dockerhub image for assignment](https://hub.docker.com/repository/docker/vivekchaudhary07/emlov2_session01/general) - `docker pull vivekchaudhary07/emlov2_session01:latest`
+
+- we have used click as command line library
+- final image size is 641MB
+
+ 
+![alt](images/gta-respect.gif)
+
 # TOC
 - [Assignment](#assignment)
+  - [Solution](#solution)
+    - [Dockerhub image for assignment - `docker pull vivekchaudhary07/emlov2_session01:latest`](#dockerhub-image-for-assignment---docker-pull-vivekchaudhary07emlov2_session01latest)
 - [TOC](#toc)
 - [Docker](#docker)
   - [Installation Guide](#installation-guide)
