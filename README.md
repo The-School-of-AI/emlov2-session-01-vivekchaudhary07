@@ -19,25 +19,16 @@ less the image size, more the bonus points
 
 ## Solution
 
-### [Dockerhub image for assignment](https://hub.docker.com/repository/docker/vivekchaudhary07/emlov2_session01/general) - `docker pull vivekchaudhary07/emlov2_session01:latest`
+## [Dockerhub image for assignment](https://hub.docker.com/repository/docker/vivekchaudhary07/emlov2_session01/general) - `docker pull vivekchaudhary07/emlov2_session01:latest`
 
 - I have used click as command line library
-- final image size is 641MB
+- final image size is 431MB
 
  
-![alt](images/gta-respect.gif)
+![alt](images/dog-snoop.gif)
 
 # TOC
-- [Assignment](#assignment)
-  - [Solution](#solution)
-    - [Dockerhub image for assignment - `docker pull vivekchaudhary07/emlov2_session01:latest`](#dockerhub-image-for-assignment---docker-pull-vivekchaudhary07emlov2_session01latest)
-- [TOC](#toc)
 - [Docker](#docker)
-  - [Installation Guide](#installation-guide)
-  - [Containers](#containers)
-    - [Starting and Stopping](#starting-and-stopping)
-  - [Docker Architecture](#docker-architecture)
-  - [Moby](#moby)
 - [Steps To Reduce Docker Image Size](#steps-to-reduce-docker-image-size)
 - [Reference](#reference)
 
@@ -207,7 +198,7 @@ COPY . .
 ENTRYPOINT ["python3", "infer.py"]
 ```
 
-- Step 4: Changing plaform aarch64 - 641MB *emlo1:try4*
+- Step 4: using pre build aarch64 platfrom image - 641MB *emlo1:try4*
 
 ```Dockerfile
 # Stage 1: Builder/Compiler
@@ -235,8 +226,39 @@ COPY . .
 
 ENTRYPOINT ["python3", "infer.py"]
 ```
+
+- Step 5: Using python:3.9.13-slim-buster with platform linux/arm64/v8 - 431MB *emlo1:try5*
+
+```Dockerfile
+# Stage 1: Builder/Compiler
+FROM --platform=linux/arm64/v8 python:3.9.13-slim-buster  AS build
+
+RUN apt-get update -y && apt install -y --no-install-recommends git
+    
+COPY requirements.txt .
+# Create the virtual environment.
+RUN python3 -m venv /venv
+ENV PATH=/venv/bin:$PATH
+
+RUN pip install --no-cache-dir -U pip
+RUN pip install -U --no-cache-dir torch numpy && pip install --no-cache-dir -r requirements.txt
+
+# # Stage 2: Runtime
+FROM --platform=linux/arm64/v8 python:3.9.13-slim-buster 
+
+COPY --from=build /venv /venv
+ENV PATH=/venv/bin:$PATH
+
+WORKDIR /src
+
+COPY . .
+
+ENTRYPOINT ["python3", "infer.py"]
+```
+
 ```\$ docker images
 REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+emlo1        try5      7a1b71498772   5 minutes ago    431MB
 emlo1        try4      9abac8a76e19   8 minutes ago    641MB
 emlo1        try3      56889548c1b1   13 minutes ago   934MB
 emlo1        try2      bf496aa83f07   22 minutes ago   1.06GB
