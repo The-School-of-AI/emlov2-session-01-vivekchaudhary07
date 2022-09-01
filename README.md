@@ -21,7 +21,7 @@ less the image size, more the bonus points
 
 ### [Dockerhub image for assignment](https://hub.docker.com/repository/docker/vivekchaudhary07/emlov2_session01/general) - `docker pull vivekchaudhary07/emlov2_session01:latest`
 
-- we have used click as command line library
+- I have used click as command line library
 - final image size is 641MB
 
  
