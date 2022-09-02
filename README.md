@@ -19,10 +19,11 @@ less the image size, more the bonus points
 
 ## Solution
 
-#### [Dockerhub image for assignment](https://hub.docker.com/repository/docker/vivekchaudhary07/emlov2_session01/general) - `docker pull vivekchaudhary07/emlov2_session01:latest`
-
+#### [Dockerhub image for assignment](https://hub.docker.com/repository/docker/vivekchaudhary07/emlov2_session01/general) 
+- `docker pull vivekchaudhary07/emlov2_session01:latest` szie 431MB
+- `docker pull vivekchaudhary07/emlov2_session01:amd64` size 858MB
 - I have used click as command line library
-- final image size is 431MB
+- final image size is 431MB, but due to platfrom limitation as we are using arm64 which is not configured in github actions, so we had to change platfrom to amd64 which increased size of image to *858MB*
 
  
 ![alt](images/dog-snoop.gif)
@@ -256,8 +257,37 @@ COPY . .
 ENTRYPOINT ["python3", "infer.py"]
 ```
 
+- Step 6: Changing platfrom to amd64 as arm64 is not configured - 858MB *emlo1:try6*
+
+```Dockerfile
+# Stage 1: Builder/Compiler
+FROM python:3.9-slim-buster as build
+
+RUN apt-get update -y && apt install -y --no-install-recommends git\
+    && pip install --no-cache-dir -U pip
+    
+COPY requirements.txt .
+
+RUN pip install --user --no-cache-dir https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp39-cp39-linux_x86_64.whl \
+    && pip install --user --no-cache-dir https://download.pytorch.org/whl/cpu/torchvision-0.12.0%2Bcpu-cp39-cp39-linux_x86_64.whl \
+    && pip install --user --no-cache-dir -r requirements.txt
+
+# Stage 2: Runtime
+FROM python:3.9-slim-buster
+
+COPY --from=build /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+
+WORKDIR /src
+
+COPY . .
+
+ENTRYPOINT ["python3", "infer.py"]
+```
+
 ```\$ docker images
 REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+emlo1        try7      903f21e85dc2   3 minutes ago    858MB
 emlo1        try5      7a1b71498772   5 minutes ago    431MB
 emlo1        try4      9abac8a76e19   8 minutes ago    641MB
 emlo1        try3      56889548c1b1   13 minutes ago   934MB
